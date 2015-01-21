@@ -7,11 +7,14 @@ public class Player {
 	
 
  String playerName="aa";
- BufferedReader input = new BufferedReader(new InputStreamReader(System.in));  boolean first_move=false;
+ BufferedReader input = new BufferedReader(new InputStreamReader(System.in));  
+ boolean first_move=false;
  
- public void processInput() throws IOException{ 
+ static int boardHeight, boardWidth;
  
-     String s=input.readLine();
+ public void processInput() throws IOException{
+ 
+  String s=input.readLine();
   List<String> ls=Arrays.asList(s.split(" "));
   if(ls.size()==2){
    System.out.println(ls.get(0)+" "+ls.get(1));
@@ -20,7 +23,9 @@ public class Player {
    System.out.println("game over!!!");
   }
   else if(ls.size()==5){          //ls contains game info
-   System.out.println("0 1");  //first move
+	  boardWidth = Integer.parseInt(ls.get(1));
+	  
+   System.out.println(Integer.toString(boardWidth/2) +" "+ "1");  //first move
   }
   else if(ls.size()==4){  //player1: aa player2: bb
    //TODO combine this information with game information to decide who is the first player
