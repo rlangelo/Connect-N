@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Player {
 	
- Move move;
+ Move move = new Move();
  String playerName="aa";
  BufferedReader input = new BufferedReader(new InputStreamReader(System.in));  
  boolean first_move=false;
