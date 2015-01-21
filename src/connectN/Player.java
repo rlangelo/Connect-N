@@ -1,11 +1,14 @@
+package connectN;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
 
+
+
 public class Player {
 	
-
+ Move move;
  String playerName="aa";
  BufferedReader input = new BufferedReader(new InputStreamReader(System.in));  
  boolean first_move=false;
@@ -17,7 +20,7 @@ public class Player {
   String s=input.readLine();
   List<String> ls=Arrays.asList(s.split(" "));
   if(ls.size()==2){
-   System.out.println(ls.get(0)+" "+ls.get(1));
+   System.out.println(move.getMove(ls));
   }
   else if(ls.size()==1){
    System.out.println("game over!!!");

@@ -1,3 +1,4 @@
+package connectN;
 /**
  * This code is created for cs 4341 AI 2013a at WPI. All rights are reserved. 
  */
@@ -174,6 +175,7 @@ public class Referee {
 	 */
 	private void sendGameInfo(String s) throws IOException{
 		if(s!=null){
+			System.out.println(s);
 			if(this.currentPlayer==this.player1)
 				this.tellPlayer1(s);
 			else
