@@ -10,6 +10,8 @@ public class Move {
 		
 	}
 	
+	// This is a test to see if I can push to GitHub
+	
 	public String getMove(List<String> lastMove) {
 		
 		//List<String> ls=Arrays.asList(lastMove.split(" "));
