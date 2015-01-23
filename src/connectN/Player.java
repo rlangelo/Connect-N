@@ -3,8 +3,6 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
-import refereePack.Board;
-
 public class Player {
 	
  // Variables for our Player
@@ -12,21 +10,29 @@ public class Player {
  BufferedReader input = new BufferedReader(new InputStreamReader(System.in));  
  boolean first_move = false;
  static int boardHeight, boardWidth, N, playerNumber;
- int board[][] = new int[10][10];
+ int board[][] = new int[100][100];
  int numMoves = 0;
- 
- // File to write to for debugging
- File file = new File("errorLog.txt");
- // if file doesnt exists, then create it
-	if (!file.exists()) {
-		file.createNewFile();
-	}
+ File file;
+
+ Player() throws IOException
+ {
+	 this.file = new File("./errorLog.txt");
+	 if (!file.exists())
+	 {
+		 file.createNewFile();
+	 }
+	FileWriter fw = new FileWriter(file.getAbsoluteFile());
+	BufferedWriter bw = new BufferedWriter(fw);
+	bw.write("File was Created!\n");
+	bw.close();
+ }
  
  /* 
   * This function is the function that process the input from the messages sent by the referee
   * it also creates the local version of the game board, and sends our moves to the referee
   */
  public void processInput() throws IOException{
+
   String s=input.readLine();
   List<String> ls=Arrays.asList(s.split(" "));
   
@@ -36,21 +42,23 @@ public class Player {
    // Record Game's specific board height and width
    boardWidth = Integer.parseInt(ls.get(1)); 
    boardHeight = Integer.parseInt(ls.get(0)); 
-
+   createBoard(boardWidth, boardHeight);
+   
    if (Integer.parseInt(ls.get(3)) == playerNumber){
 	   first_move = true;
 	   System.out.println(Integer.toString(boardWidth/2) +" "+ "1");  //first move
+	   addMove(Integer.toString(boardWidth/2), true);
    }
    else{
 	   System.out.println("0" +" "+ "1");  //first move
    }
-   createBoard(boardWidth, boardHeight);
   }
   
   // We have been sent a move from the other player --  Add to baord and make a move
   else if(ls.size()==2){ 
+	 addMove(ls.get(0), false);
 	 System.out.println(ls.get(0)+" "+ls.get(1));
-	 addToBoard(ls.get(0));
+	 addMove(ls.get(0), true);
   }
   
   // Game is over
@@ -72,19 +80,55 @@ public class Player {
  }
   
  // Add a move to our local version of the game board
- public void addToBoard(String column) throws IOException {
+ public void addMove(String column, boolean myMove) throws IOException {
 		int col = Integer.parseInt(column);
+		int row = -1;
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		BufferedWriter bw = new BufferedWriter(fw);
 		for (int i=0;i<boardHeight;i++)
+		
 			if(board[i][col]==9){
-				if (playerNumber == 1){
-					board[i][col] = 2;
+				row = i;
+				if (!myMove)
+				{
+					if (playerNumber == 1){
+						board[i][col] = 2;
+						break;
+					}
+					else{
+						board[i][col] = 1;
+						break;
+					}
 				}
-				else{
-					board[i][col] = 1;
+				else
+				{
+					if (playerNumber == 1)
+					 {
+						 board[i][col] = 1;
+						 break;
+					 }
+					 else
+					 {
+						 board[i][col] = 2;
+						 break;
+					 }
 				}
 			}
-		}	
-	}
+		
+		
+		if (myMove && row >= 0)
+		{
+			//bw.write("Player added a piece to (row, col): (" + row + "," + col + ") to the board\n");
+			//bw.close();
+			printBoardToFile();
+		}
+		else if (!myMove && row >= 0)
+		{
+			//bw.write("Opponent added a piece to (row, col): (" + row + "," + col + ") to the board\n");
+			//bw.close();
+			printBoardToFile();
+		}
+ }
 
  // Create the local version of the gane board
 public void createBoard(int width, int height) throws IOException {
@@ -93,10 +137,28 @@ public void createBoard(int width, int height) throws IOException {
 		   board[i][j] = 9;
 	   }
     }
-	
-	FileWriter fw = new FileWriter(file.getAbsoluteFile());
+    FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
 	BufferedWriter bw = new BufferedWriter(fw);
-	bw.write("Board was Created!");
+	bw.write("Board was created!\n");
+	bw.close();
+	printBoardToFile();
+}
+
+public void printBoardToFile() throws IOException
+{
+    FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+	BufferedWriter bw = new BufferedWriter(fw);
+	bw.write("Board: \n");
+	for (int i=0;i<boardWidth;i++)
+	{
+		for (int j=0; j<boardHeight; j++)
+		{
+			
+			bw.write(board[i][j] + " ");
+			
+		}
+	}
+	bw.write(" \n");
 	bw.close();
 }
  
