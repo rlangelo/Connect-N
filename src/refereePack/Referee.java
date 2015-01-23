@@ -97,6 +97,7 @@ public class Referee {
 		String s=this.board.height+" "+this.board.width+" "+this.N+" "+this.currentPlayer+" "+this.moveTimeLimit;
 		System.out.println(s);
 		System.out.println("currentPlayer:"+this.currentPlayer);
+		System.out.flush();
 		this.tellPlayer1(s);
 		this.tellPlayer2(s);
 		
@@ -113,6 +114,7 @@ public class Referee {
 			List<String> ls=Arrays.asList(s.split(" "));
 			if(ls.size()!=2){
 				System.out.println("Wrong number of arguments. Each move should have two integers.");
+				System.out.flush();
 				this.winner= this.currentPlayer==1? 2 : 1;
 			}
 			else{
@@ -125,6 +127,7 @@ public class Referee {
 				      if(isEnd()){
 						   this.currentPlayer = this.currentPlayer==1? 2 : 1;
 						   System.out.println("currentPlayer:"+this.currentPlayer);
+						   System.out.flush();
 						   break;
 						   }
 					   else{
@@ -134,6 +137,7 @@ public class Referee {
 				}
 				else{
 					System.out.println("Invalid Move. ");	
+					System.out.flush();
 					this.winner= this.currentPlayer==1? 2 : 1;
 					}
 		    }
@@ -153,6 +157,7 @@ public class Referee {
 	 */
 	private void readPlayerName() throws IOException{
 		System.out.println("Please enter two players user name. You have "+this.announceNameTimeLimit+"s to enter.");
+		System.out.flush();
 		countDown(this.announceNameTimeLimit);
 		
 		player1_name=input1.readLine();		 
@@ -162,6 +167,7 @@ public class Referee {
 		
 		String s="player1: "+player1_name+" player2: "+player2_name;
 		System.out.println(s);
+		System.out.flush();
 		this.tellPlayer1(s);
 		this.tellPlayer2(s);
 	}
@@ -176,6 +182,7 @@ public class Referee {
 	private void sendGameInfo(String s) throws IOException{
 		if(s!=null){
 			System.out.println(s);
+			System.out.flush();
 			if(this.currentPlayer==this.player1)
 				this.tellPlayer1(s);
 			else
@@ -203,7 +210,7 @@ public class Referee {
 			else
 				this.tellPlayer2(Integer.toString(-2));
 		}
-		}
+	}
 
 	
 	/**
@@ -233,6 +240,7 @@ public class Referee {
 		  }
 		else{
 			System.out.println("Wrong operation.");
+			System.out.flush();
 			return false; 
 		} 
 			
@@ -289,14 +297,14 @@ public class Referee {
 	
 	private void tellPlayer1(String s) throws IOException{
 		 output1.write(s);
-		  output1.newLine(); 
-		  output1.flush();
+		 output1.newLine(); 
+		 output1.flush();
 	}
 	
 	private void tellPlayer2(String s) throws IOException{
 		 output2.write(s);
-		  output2.newLine(); 
-		  output2.flush();
+		 output2.newLine(); 
+		 output2.flush();
 	}
 
 	/**
@@ -308,6 +316,7 @@ public class Referee {
 	private void gameOver() throws IOException{
 		if(this.player1_name=="" || this.player2_name==""){
 			System.out.println("Cannot set up a game without two players.");
+			System.out.flush();
 			
 		}
 		
@@ -321,6 +330,7 @@ public class Referee {
 		System.out.println("****************************************");
 		System.out.println("*             Game Over!               *");
 		System.out.println("****************************************");
+		System.out.flush();
 	}
 	
 	
@@ -337,7 +347,8 @@ public class Referee {
 		this.autoTimer.schedule(new TimerTask() {
             public void run() {
             	System.out.println("Time Out!");
-            	 winner=  currentPlayer==1? 2 : 1;
+            	System.out.flush();
+            	winner=  currentPlayer==1? 2 : 1;
             	try {
 					gameOver();
 				} catch (IOException e) {
