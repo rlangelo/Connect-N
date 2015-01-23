@@ -13,29 +13,43 @@ public class Player {
  
  static int boardHeight, boardWidth, N, playerNumber;
  
- int board[][];
+ int board[][] = new int[10][10];
  
  public void processInput() throws IOException{
- 
   String s=input.readLine();
   List<String> ls=Arrays.asList(s.split(" "));
   if(ls.size()==5){          //ls contains game info
-   boardWidth = Integer.parseInt(ls.get(1));
-   boardHeight = Integer.parseInt(ls.get(0));
-   playerNumber = Integer.parseInt(ls.get(3));
-   N = Integer.parseInt(ls.get(2));
-   System.out.println(Integer.toString(boardWidth/2) +" "+ "1");  //first move
+   boardWidth = Integer.parseInt(ls.get(1)); //Save board width for this game
+   boardHeight = Integer.parseInt(ls.get(0)); //Same for board height
+	
+
+   if (Integer.parseInt(ls.get(3)) == playerNumber)
+   {
+	   first_move = true;
+	   System.out.println(Integer.toString(boardWidth/2) +" "+ "1");  //first move
+   }
+   else
+   {
+	   System.out.println("0" +" "+ "1");  //first move
+   }
    createBoard(boardWidth, boardHeight);
   }
   else if(ls.size()==2){ 
 	 System.out.println(ls.get(0)+" "+ls.get(1));
-	 addToBoard(ls.get(0));
+	 //addToBoard(ls.get(0));
   }
   else if(ls.size()==1){
    System.out.println("game over!!!");
   }
   else if(ls.size()==4){  //player1: aa player2: bb
-   //TODO combine this information with game information to decide who is the first player
+   if (ls.get(1).equals(playerName))
+   {
+	   playerNumber = 1;
+   }
+   else
+   {
+	   playerNumber = 2;
+   }
   }
   else 
    System.out.println("not what I want");  }
@@ -57,10 +71,14 @@ public class Player {
 				}
 			}
 		}
+		
 	}
 
-public void createBoard(int width, int height)
+public void createBoard(int width, int height) throws IOException
 {
+	   File file = new File("/Users/rafaelangelo/Documents/workspace/Connect-N/bin/errorLog.txt");
+	   
+
 	   for (int i=0;i<width;i++)
 	   {
 		   for (int j=0;j<height;j++)
@@ -68,6 +86,14 @@ public void createBoard(int width, int height)
 			   board[i][j] = 9;
 		   }
 	   }
+		// if file doesnt exists, then create it
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+		FileWriter fw = new FileWriter(file.getAbsoluteFile());
+		BufferedWriter bw = new BufferedWriter(fw);
+		bw.write("Board was Created!");
+		bw.close();
 }
  
  public static void main(String[] args) throws IOException {
