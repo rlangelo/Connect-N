@@ -16,7 +16,7 @@ public class Player {
 
  Player() throws IOException
  {
-	 this.file = new File("./errorLog.txt");
+	 this.file = new File("./Logfile.txt");
 	 if (!file.exists())
 	 {
 		 file.createNewFile();
@@ -132,8 +132,8 @@ public class Player {
 
  // Create the local version of the gane board
 public void createBoard(int width, int height) throws IOException {
-   for (int i=0; i<width; i++){
-	   for (int j=0; j<height; j++){
+   for (int i=0; i<height; i++){
+	   for (int j=0; j<width; j++){
 		   board[i][j] = 9;
 	   }
     }
@@ -149,14 +149,14 @@ public void printBoardToFile() throws IOException
     FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
 	BufferedWriter bw = new BufferedWriter(fw);
 	bw.write("Board: \n");
-	for (int i=0;i<boardWidth;i++)
+	for (int i=boardHeight-1;i>=0;i--)
 	{
-		for (int j=0; j<boardHeight; j++)
-		{
-			
-			bw.write(board[i][j] + " ");
-			
+		for (int j=0; j<boardWidth; j++)
+		{	
+			bw.write(board[i][j] + " ");	
+		
 		}
+		bw.write(" \n");
 	}
 	bw.write(" \n");
 	bw.close();
