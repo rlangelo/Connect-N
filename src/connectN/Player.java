@@ -6,17 +6,18 @@ import java.util.List;
 public class Player {
 	
  // Variables for our Player
- String playerName="aa";
+ String playerName="myOtherPlayer";
  BufferedReader input = new BufferedReader(new InputStreamReader(System.in));  
  boolean first_move = false;
  static int boardHeight, boardWidth, N, playerNumber;
  int board[][] = new int[100][100];
  int numMoves = 0;
  File file;
+ MiniMax result;
 
  Player() throws IOException
  {
-	 this.file = new File("./Logfile.txt");
+	 this.file = new File("./Logfile2.txt");
 	 if (!file.exists())
 	 {
 		 file.createNewFile();
@@ -35,7 +36,9 @@ public class Player {
 
   String s=input.readLine();
   List<String> ls=Arrays.asList(s.split(" "));
-  
+  FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+  BufferedWriter bw = new BufferedWriter(fw);
+  this.result = new MiniMax();
   // Parse the messages from the Array
   // This parses the game info and creates our local board
   if(ls.size()==5){
@@ -44,21 +47,26 @@ public class Player {
    boardHeight = Integer.parseInt(ls.get(0)); 
    createBoard(boardWidth, boardHeight);
    
-   if (Integer.parseInt(ls.get(3)) == playerNumber){
+   if (Integer.parseInt(ls.get(3)) == playerNumber || Integer.parseInt(ls.get(3))-1 == playerNumber){
 	   first_move = true;
 	   System.out.println(Integer.toString(boardWidth/2) +" "+ "1");  //first move
-	   addMove(Integer.toString(boardWidth/2), true);
-   }
-   else{
-	   System.out.println("0" +" "+ "1");  //first move
+	   addMove(Integer.toString(boardWidth/2), true, board);
    }
   }
   
   // We have been sent a move from the other player --  Add to baord and make a move
   else if(ls.size()==2){ 
-	 addMove(ls.get(0), false);
-	 System.out.println(ls.get(0)+" "+ls.get(1));
-	 addMove(ls.get(0), true);
+	  
+	// bw.write("Move received\n");
+		 addMove(ls.get(0), false, board);
+		 Move mov = this.result.abMinimax(true, playerNumber, 5, board, boardWidth, boardHeight);
+		 int col = mov.nextMove;
+		 bw.write("Column: " + col +"\n");
+		 bw.close();
+		 System.out.println(Integer.toString(col)+" "+"1");
+		 addMove(Integer.toString(col), true, board);
+	 
+	 // System.out.println("4 1");
   }
   
   // Game is over
@@ -72,7 +80,7 @@ public class Player {
 	   playerNumber = 1;
    }
    else{
-	   playerNumber = 2;
+	   playerNumber = 1;
    }
   }
   else 
@@ -80,11 +88,9 @@ public class Player {
  }
   
  // Add a move to our local version of the game board
- public void addMove(String column, boolean myMove) throws IOException {
+ public void addMove(String column, boolean myMove, int[][] board) throws IOException {
 		int col = Integer.parseInt(column);
 		int row = -1;
-		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
-		BufferedWriter bw = new BufferedWriter(fw);
 		for (int i=0;i<boardHeight;i++)
 		
 			if(board[i][col]==9){
@@ -118,14 +124,10 @@ public class Player {
 		
 		if (myMove && row >= 0)
 		{
-			//bw.write("Player added a piece to (row, col): (" + row + "," + col + ") to the board\n");
-			//bw.close();
 			printBoardToFile();
 		}
 		else if (!myMove && row >= 0)
 		{
-			//bw.write("Opponent added a piece to (row, col): (" + row + "," + col + ") to the board\n");
-			//bw.close();
 			printBoardToFile();
 		}
  }
