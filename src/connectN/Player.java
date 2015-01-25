@@ -59,9 +59,50 @@ public class Player {
   else if(ls.size()==2){ 
 	  	int alpha=Integer.MIN_VALUE;
 	    int beta=Integer.MAX_VALUE;
-		 addMove(ls.get(0), false, board);
-		 System.out.println("0" + " " + "1");
-		 addMove("0", true, board);
+	    //if it's a win condition play there!
+	    for (int i=0;i<boardHeight;i++)
+	    {
+	    	for (int j=0;j<boardWidth;j++)
+	    	{
+	    		if (this.result.isOKMove(board, i, j, boardWidth, boardHeight))
+	    		{
+	    			board[i][j] = playerNumber;
+	    		
+	    			if (this.result.isWin(boardWidth, boardHeight, board))
+	    			{
+	    				System.out.println(Integer.toString(j) + " " + "1");
+	    				return;
+	    			}
+	    		}
+	    		board[i][j] = 9;
+	    	}
+	    }
+	    
+	    for (int i=0;i<boardHeight;i++)
+	    {
+	    	for (int j=0;j<boardWidth;j++)
+	    	{
+	    		if (this.result.isOKMove(board, i, j, boardWidth, boardHeight))
+	    		{
+	    			int opponentNumber = (playerNumber == 1) ? 2 : 1;
+	    			board[i][j] = opponentNumber;
+	    			if (this.result.isWin(boardWidth, boardHeight, board))
+	    			{
+	    				System.out.println(Integer.toString(j) + " " + "1");
+	    				board[i][j] = playerNumber;
+	    				return;
+	    			}
+	    		}
+	    		board[i][j] = 9;
+	    	}
+	    }
+	    
+	    
+	    
+	    
+		// addMove(ls.get(0), false, board);
+		// System.out.println("0" + " " + "1");
+		// addMove("0", true, board);
 	 
 	 // System.out.println("4 1");
   }
