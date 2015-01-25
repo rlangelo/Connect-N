@@ -2,6 +2,7 @@ package connectN;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class Player {
 	
@@ -17,7 +18,7 @@ public class Player {
 
  Player() throws IOException
  {
-	 this.file = new File("./Logfile2.txt");
+	 this.file = new File("./Logfile.txt");
 	 if (!file.exists())
 	 {
 		 file.createNewFile();
@@ -56,15 +57,11 @@ public class Player {
   
   // We have been sent a move from the other player --  Add to baord and make a move
   else if(ls.size()==2){ 
-	  
-	// bw.write("Move received\n");
+	  	int alpha=Integer.MIN_VALUE;
+	    int beta=Integer.MAX_VALUE;
 		 addMove(ls.get(0), false, board);
-		 Move mov = this.result.abMinimax(true, playerNumber, 5, board, boardWidth, boardHeight);
-		 int col = mov.nextMove;
-		 bw.write("Column: " + col +"\n");
-		 bw.close();
-		 System.out.println(Integer.toString(col)+" "+"1");
-		 addMove(Integer.toString(col), true, board);
+		 System.out.println("0" + " " + "1");
+		 addMove("0", true, board);
 	 
 	 // System.out.println("4 1");
   }
@@ -80,7 +77,7 @@ public class Player {
 	   playerNumber = 1;
    }
    else{
-	   playerNumber = 1;
+	   playerNumber = 2;
    }
   }
   else 
