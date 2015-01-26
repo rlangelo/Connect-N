@@ -2,11 +2,12 @@ package connectN;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class Player {
 
 	// Variables for our Player
-	String playerName="myOtherPlayer";
+	String playerName="myPlayer";
 	BufferedReader input = new BufferedReader(new InputStreamReader(System.in));  
 	boolean first_move = false;
 	static int boardHeight, boardWidth, N, playerNumber;
@@ -18,7 +19,7 @@ public class Player {
 
 	// Constructor to make the debug file
 	Player() throws IOException {
-		this.file = new File("./Logfile.txt");
+		this.file = new File("./Logfile2.txt");
 		if (!file.exists())
 		{
 			file.createNewFile();
@@ -34,6 +35,8 @@ public class Player {
 	 * it also creates the local version of the game board, and sends our moves to the referee
 	 */
 	public void processInput() throws IOException {
+		//FileWriter fw = new FileWriter(file.getAbsoluteFile());
+		//BufferedWriter bw = new BufferedWriter(fw);
 		String s=input.readLine();
 		List<String> ls=Arrays.asList(s.split(" "));
 		this.result = new MiniMax();
@@ -43,90 +46,52 @@ public class Player {
 			// Record Game's specific board height and width
 			boardWidth = Integer.parseInt(ls.get(1)); 
 			boardHeight = Integer.parseInt(ls.get(0)); 
+			N = Integer.parseInt(ls.get(2));
 			createBoard(boardWidth, boardHeight);
 
 			if (Integer.parseInt(ls.get(3)) == playerNumber){
 				first_move = true;
 				System.out.println(Integer.toString(boardWidth/2) +" "+ "1");  //first move
 				addMove(Integer.toString(boardWidth/2), true, board);
+				
 			}
 		}
 
 		// We have been sent a move from the other player --  Add to board and make a move
 		else if(ls.size()==2){ 
 			addMove(ls.get(0), false, board);
-			int myMove = 6;
+			Random rand = new Random();
+			int myMove = rand.nextInt(7);
 			int horizontal = -1;
+			int diagonal1 = -1;
 			for (int i=0;i<boardWidth;i++)
 			{
 				myMove = this.result.checkVertically(board, boardWidth, boardHeight, playerNumber);
 				horizontal = this.result.checkHorizontally(board, boardWidth, boardHeight, playerNumber);
-				if (myMove == -1 && horizontal == -1)
+				if (myMove == -1)
 				{
-					myMove = 6;
-				}
-				else
-				{
-					if (myMove == -1)
+					if (horizontal != -1)
 					{
 						myMove = horizontal;
 					}
-				}
-
-			}
-			
-			
-			//if it's a win condition play there!
-			/*
-			outerLoop: 
-			for (int i=0;i<boardHeight;i++){
-				for (int j=0;j<boardWidth;j++){
-					if (this.result.isOKMove(temp, i, j, boardWidth, boardHeight)){
-						temp[i][j] = playerNumber;
-						if (this.result.isWin(boardWidth, boardHeight, temp)){
-						//	System.out.println(Integer.toString(j) + " " + "1");
-							temp[i][j] = 9;
-							myMove = j;
-							break outerLoop;
-							//addMove(Integer.toString(j), true, board);
-							//return;
-						}
+					else if (diagonal1 != -1)
+					{
+						myMove = diagonal1;
 					}
-					temp[i][j] = 9;
+				}
+				
+			}
+			if (myMove == -1)
+			{
+				myMove = rand.nextInt(7);
+				while (this.result.isColFull(myMove, board, boardHeight))
+				{
+					myMove = rand.nextInt(7);
 				}
 			}
-			//if it's a lose condition also play there
-			outerLoop:
-			for (int i=0;i<boardHeight;i++){
-				for (int j=0;j<boardWidth;j++){
-					if (this.result.isOKMove(temp, i, j, boardWidth, boardHeight)){
-						int opponentNumber = (playerNumber == 1) ? 2 : 1;
-						temp[i][j] = opponentNumber;
-						bw.write("What about here? " + opponentNumber + "\n");	
-						if (this.result.isWin(boardWidth, boardHeight, temp)){
-					//		System.out.println(Integer.toString(j) + " " + "1");
-					//		//addMove(Integer.toString(j), true, board);
-							//return;
-							bw.write("Does it come here? Roll a j: " + j + "\n");
-							myMove = j;
-							temp[i][j] = 9;
-							break outerLoop;
-						}
-					}
-					temp[i][j] = 9;
-				}
-			}
-			//Find minimax.
-			//Move mov = new Move();
-			//mov = this.result.getMiniMax(board, 0, 5, true, boardHeight, boardWidth, playerNumber);
-			//int nextMoveColumn = mov.nextMove;
-			//moveVal = mov.score;
-			//System.out.println(Integer.toString(nextMoveColumn) + " " + "1");*/
-			//bw.close();
 			System.out.println(Integer.toString(myMove) + " " + "1");
 			
 			addMove(Integer.toString(myMove), true, board);
-			
 		}
 
 		// Game is over
@@ -216,6 +181,7 @@ public class Player {
 		bw.write(" \n");
 		bw.close();
 	}
+	
 
 	public static void main(String[] args) throws IOException {
 		Player rp=new Player();
@@ -225,5 +191,7 @@ public class Player {
 			rp.processInput(); 
 		}
 	}
+	
+	
 
 }

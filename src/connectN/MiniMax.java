@@ -13,7 +13,7 @@ public class MiniMax {
 	File file;
 	MiniMax() throws IOException
 	{
-		file = new File("./Logfile.txt");
+		file = new File("./Logfile2.txt");
 		if (!file.exists())
 		{
 			file.createNewFile();
@@ -39,12 +39,12 @@ public class MiniMax {
 					max2=0;
 					if(max1==3)
 					{
-						bw.write("There are three 2s in line.\n");
+						//bw.write("There are three 2s in line.\n");
 						if (i != height-1)
 						{
 							if (board[i+1][j] == 9)
 							{
-								bw.write(j + "Us \n");
+								bw.write("Winning with vertical!");
 								bw.close();
 								return j;
 
@@ -58,12 +58,12 @@ public class MiniMax {
 					max2++;
 					if(max2==3)
 					{
-						bw.write("Opponent has 3 in line. \n");
+						//bw.write("Opponent has 3 in line. \n");
 						if (i != height-1)
 						{
 							if (board[i+1][j] == 9)
 							{
-								bw.write(j + " Opponent \n");
+								bw.write("Blocking Opponent vertical \n");
 								bw.close();
 								return j;
 							}
@@ -100,23 +100,36 @@ public class MiniMax {
 						{
 							if (spaceLocation != -1)
 							{
+								bw.write("Winning space Horizontally!\n");
+								bw.close();
 								return spaceLocation;
 							}
 							if (j != width-1)
 							{
 								if (board[i][j+1] == 9)
 								{
-									return j;
+									bw.write("Winning Horizontally!\n");
+									bw.close();
+									return j+1;
 								}
 								else if (board[i][j-3] == 9)
 								{
-									return j-3;
-								}
+									if (i > 0)
+									{
+										if (board[i-1][j-3] != 9)
+										{
+											bw.write("Winning as well Horizontally!\n");
+											bw.close();
+											return j-3;
+										}
+									}
 							}
 							else if (j == width-1)
 							{
 								if (board[i][j-3] == 9)
 								{
+									bw.write("Also winning horizontally!\n");
+									bw.close();
 									return j-3;
 								}
 							}
@@ -130,18 +143,24 @@ public class MiniMax {
 						{
 							if (spaceLocation != -1)
 							{
+								bw.write("Blocking space Horizontal\n");
+								bw.close();
 								return spaceLocation;
 							}
 							if (j != width-1)
 							{
 								if (board[i][j+1] == 9)
 								{
-									return j;
+									bw.write("Blocking opponent! Horizontal\n");
+									bw.close();
+									return j+1;
 								}
 								else if (j > 2)
 								{
 									if (board[i][j-3] == 9)
 									{
+										bw.write("Also block opponent! Horizontal\n");
+										bw.close();
 										return j-3;
 									}
 								}
@@ -150,13 +169,15 @@ public class MiniMax {
 							{
 								if (board[i][j-3] == 9)
 								{
+									bw.write("Blocking as well! Horizontal\n");
+									bw.close();
 									return j-3;
 								}
 							}
 						}
 							
 					}
-					else if ((max2 == 1 || max2 == 2) && spaceLocation == -1)
+					else if (((max2 == 1 || max2 == 2) && spaceLocation == -1) || ((max1 == 1 || max1 == 2) && spaceLocation == -1))
 					{
 							spaceLocation = j;
 					}
@@ -166,8 +187,85 @@ public class MiniMax {
 					}
 				}
 			 } 
+			 }
+			 bw.close();
 			 return -1;
 	  }
+	/*
+	public int checkDiagonally1(int[][] board, int width, int height, int player, int N) throws IOException
+	{
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		BufferedWriter bw = new BufferedWriter(fw);
+		int max1=0;
+		int max2=0;
+		int spaceLocation = -1;		
+		int opponentPlayer = (player == 1) ? 2 : 1;
+		int upper_bound=height-1+width-1-(N-1);
+		
+		 for(int k=N-1;k<=upper_bound;k++){			
+			 max1=0;
+			 max2=0;
+			 int x,y;
+			 if(k<width) 
+				 x=k;
+			 else
+				 x=width-1;
+			 y=-x+k;
+			 while(x>=0  && y<height){
+					// System.out.println("k: "+k+", x: "+x+", y: "+y);
+					if(board[height-1-y][x]==player){
+						max1++;
+						max2=0;
+						if(max1==3)
+						{
+							if (spaceLocation != -1)
+							{
+								if (board[height-y-1][x+1] != 9)
+								{
+									return x+1;
+								}
+							}
+							if (board[height-1-y-1][x-1] == 9 && board[height-1-y-2][x-1] == 9)
+							{
+								return x-1;
+							}
+							
+						}
+							 
+					}
+					else if(board[height-1-y][x]==opponentPlayer){
+						max1=0;
+						max2++;
+						if(max2==3)
+						{
+							if (board[height-y-1][x+1] != 9)
+							{
+								return x+1;
+							}
+							if (board[height-1-y-1][x-1] == 9 && board[height-1-y-2][x-1] == 9)
+							{
+								return x-1;
+							}
+						}
+							
+					}
+					else if (((max2 == 1 || max2 == 2) && spaceLocation == -1) || (max1 == 1 || max1 == 2) && spaceLocation == -1)
+					{
+						spaceLocation = 1;
+					}
+					else{
+						max1=0;
+						max2=0;
+					}
+					x--;
+					y++;
+				}	 
+				 
+			 }
+		
+		return -1;
+	}
+	*/
 	// This function checks to see if there the state is a winning state
 	boolean isWin(int width, int height, int[][] gameBoard) throws IOException {
 		boolean win = false;
@@ -309,5 +407,17 @@ public class MiniMax {
 			mov.score = nextMove[2];
 			return mov;
 		}//end else
+	}
+	
+	public boolean isColFull(int column, int board[][], int height)
+	{
+		if (board[height-1][column] == 9)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 }
