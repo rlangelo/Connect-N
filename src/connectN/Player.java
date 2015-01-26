@@ -47,20 +47,37 @@ public class Player {
 			boardHeight = Integer.parseInt(ls.get(0)); 
 			createBoard(boardWidth, boardHeight);
 
-			if (Integer.parseInt(ls.get(3)) == playerNumber || Integer.parseInt(ls.get(3))-1 == playerNumber){
+			if (Integer.parseInt(ls.get(3)) == playerNumber){
 				first_move = true;
 				System.out.println(Integer.toString(boardWidth/2) +" "+ "1");  //first move
 				addMove(Integer.toString(boardWidth/2), true, board);
-				addMove(Integer.toString(boardWidth/2), true, temp);
 			}
 		}
 
 		// We have been sent a move from the other player --  Add to board and make a move
 		else if(ls.size()==2){ 
 			addMove(ls.get(0), false, board);
-			addMove(ls.get(0), false, temp);
 			int myMove = 6;
+			int horizontal = -1;
+			for (int i=0;i<boardWidth;i++)
+			{
+				myMove = this.result.checkVertically(board, boardWidth, boardHeight, playerNumber);
+				horizontal = this.result.checkHorizontally(board, boardWidth, boardHeight, playerNumber);
+				if (myMove == -1 && horizontal == -1)
+				{
+					myMove = 6;
+				}
+				else
+				{
+					if (myMove == -1)
+					{
+						myMove = horizontal;
+					}
+				}
+
+			}
 			//if it's a win condition play there!
+			/*
 			outerLoop: 
 			for (int i=0;i<boardHeight;i++){
 				for (int j=0;j<boardWidth;j++){
@@ -78,9 +95,6 @@ public class Player {
 					temp[i][j] = 9;
 				}
 			}
-			FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write("IS THIS SHIT WORKING?");
 			//if it's a lose condition also play there
 			outerLoop:
 			for (int i=0;i<boardHeight;i++){
@@ -107,11 +121,10 @@ public class Player {
 			//mov = this.result.getMiniMax(board, 0, 5, true, boardHeight, boardWidth, playerNumber);
 			//int nextMoveColumn = mov.nextMove;
 			//moveVal = mov.score;
-			//System.out.println(Integer.toString(nextMoveColumn) + " " + "1");
-			bw.close();
+			//System.out.println(Integer.toString(nextMoveColumn) + " " + "1");*/
+			//bw.close();
 			System.out.println(Integer.toString(myMove) + " " + "1");
 			
-			addMove(Integer.toString(myMove), true, board);
 			addMove(Integer.toString(myMove), true, board);
 			
 		}

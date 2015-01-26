@@ -21,7 +21,150 @@ public class MiniMax {
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
 		BufferedWriter bw = new BufferedWriter(fw);
 	}
+	
+	public int checkVertically(int[][] board, int width, int height, int player) throws IOException {
+		//check each column, vertically
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		BufferedWriter bw = new BufferedWriter(fw);
+		int max1=0;
+		int max2=0;
+		int opponentPlayer = (player == 1) ? 2 : 1;
 
+		for(int j=0;j<width;j++){
+			max1=0;
+			max2=0;
+			for(int i=0;i<height;i++){
+				if(board[i][j]==player){
+					max1++;
+					max2=0;
+					if(max1==3)
+					{
+						bw.write("There are three 2s in line.\n");
+						if (i != height-1)
+						{
+							if (board[i+1][j] == 9)
+							{
+								bw.write(j + "Us \n");
+								bw.close();
+								return j;
+
+							}
+						}
+					}
+
+				}
+				else if(board[i][j]==opponentPlayer){
+					max1=0;
+					max2++;
+					if(max2==3)
+					{
+						bw.write("Opponent has 3 in line. \n");
+						if (i != height-1)
+						{
+							if (board[i+1][j] == 9)
+							{
+								bw.write(j + " Opponent \n");
+								bw.close();
+								return j;
+							}
+						}
+					}
+				}
+				else{
+					max1=0;
+					max2=0;
+				}
+			}
+		} 
+		bw.close();
+		return -1;
+
+	}
+
+	public int checkHorizontally(int[][] board, int width, int height, int player) throws IOException {
+			FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+			BufferedWriter bw = new BufferedWriter(fw);
+			int max1=0;
+			int max2=0;
+			int spaceLocation = -1;		
+			int opponentPlayer = (player == 1) ? 2 : 1;
+			 //check each row, horizontally
+			 for(int i=0;i<height;i++){
+				 max1=0;
+				 max2=0;
+				for(int j=0;j<width;j++){
+					if(board[i][j]==player){
+						max1++;
+						max2=0;
+						if(max1==3)
+						{
+							if (spaceLocation != -1)
+							{
+								return spaceLocation;
+							}
+							if (j != width-1)
+							{
+								if (board[i][j+1] == 9)
+								{
+									return j;
+								}
+								else if (board[i][j-3] == 9)
+								{
+									return j-3;
+								}
+							}
+							else if (j == width-1)
+							{
+								if (board[i][j-3] == 9)
+								{
+									return j-3;
+								}
+							}
+						}
+							
+					}
+					else if(board[i][j]==opponentPlayer){
+						max1=0;
+						max2++;
+						if(max2==3)
+						{
+							if (spaceLocation != -1)
+							{
+								return spaceLocation;
+							}
+							if (j != width-1)
+							{
+								if (board[i][j+1] == 9)
+								{
+									return j;
+								}
+								else if (board[i][j-3] == 9)
+								{
+									return j-3;
+								}
+							}
+							else if (j == width-1)
+							{
+								if (board[i][j-3] == 9)
+								{
+									return j-3;
+								}
+							}
+						}
+							
+					}
+					else if ((max1 == 1 || max1 == 2) && spaceLocation == -1)
+					{
+							spaceLocation = j;
+					}
+					else{
+						max1=0;
+						max2=0;
+					}
+				}
+			 } 
+			 return -1;
+	  }
 	// This function checks to see if there the state is a winning state
 	boolean isWin(int width, int height, int[][] gameBoard) throws IOException {
 		boolean win = false;
