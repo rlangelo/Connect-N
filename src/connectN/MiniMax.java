@@ -99,4 +99,71 @@ public class MiniMax {
 		return false;
     }
 	
+	// This function will preform the Minimax Algorithm
+	int[] getMiniMax(int[][] board, int depth, int limit, boolean flag, int boardWidth, int boardHeight){
+		int oldValue; value, storedValue;
+		int[] nextMove=new int[] {0,0};
+		int max = math
+
+		
+		if (isInterrupted()) {
+//  	    nextMove[0] = rowNextMove;
+//  	    nextMove[1] = colNextMove;
+			return new int[] {rowNextMove,colNextMove,0};
+  	}
+
+		if (isTie(board)) {
+			return utility(board);
+		}
+
+		//depth limiter
+		if (depth == limit) {
+			return staticBoardEvaluator(board);
+		}
+
+		depth = depth + 1;
+		
+		// If min is selected, find the min
+		if (flag) {
+			value = Integer.MAX_VALUE;
+			for (int i=0; i<=boardHeight; i++) {
+				for (int j=0; j<=boardWidth; j++) {
+					if (isOKMove(board, i, j)) {
+						oldValue = value;
+						storedValue =board[i][j];
+						board[i][j] = PLAYER2_MOVE;
+						value = java.lang.Math.min(value, (int) miniMax(board, depth, limit, !flag, boardWidth, boardHeight)[2]);
+						board[i][j] = storedValue;
+						if ((depth == 1) && (value < oldValue)) {
+							nextMove[0] = i;
+							nextMove[1] = j;
+						}
+					}/
+				}
+			}
+			//return new int[] {nextMove[0],nextMove[1],beta};
+			return new int[] {nextMove[0], nextMove[1], value};
+		}
+		// If the minimum is not selected, then find the maximum
+		else {
+			value = Integer.MIN_VALUE;
+			for (int i=0; i<=boardHeight; i++) {
+				for (int j=0; j<=boardWidth; j++) {
+					if (isOKMove(board, i, j)) {
+						oldValue = value;
+						storedValue = board[i][j];
+						board[i][j] = PLAYER1_MOVE;
+						v = java.lang.Math.max(vale, (int) miniMax(gameBoard, depth, limit, !flag, boardWidth, boardHeight)[2]);
+						board[i][j] = savedValue;
+						if ((depth == 1) && (value > oldValue)) {	   
+							nextMove[0] = i;
+							nextMove[1] = j;
+						}
+					}
+				}
+			}
+			//return new int[] {nextMove[0],nextMove[1],alpha};
+			return new int[] {nextMove[0], nextMove[1], value};
+		}//end else
+	}
 }
