@@ -2,7 +2,6 @@ package connectN;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class Player {
 
@@ -12,6 +11,7 @@ public class Player {
 	boolean first_move = false;
 	static int boardHeight, boardWidth, N, playerNumber;
 	int board[][] = new int[100][100];
+	int temp[][] = new int[100][100];
 	int numMoves = 0;
 	File file;
 	MiniMax result;
@@ -38,8 +38,6 @@ public class Player {
 		int moveVal;
 		String s=input.readLine();
 		List<String> ls=Arrays.asList(s.split(" "));
-		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
-		BufferedWriter bw = new BufferedWriter(fw);
 		this.result = new MiniMax();
 		// Parse the messages from the Array
 		// This parses the game info and creates our local board
@@ -53,55 +51,69 @@ public class Player {
 				first_move = true;
 				System.out.println(Integer.toString(boardWidth/2) +" "+ "1");  //first move
 				addMove(Integer.toString(boardWidth/2), true, board);
+				addMove(Integer.toString(boardWidth/2), true, temp);
 			}
 		}
 
-		// We have been sent a move from the other player --  Add to baord and make a move
+		// We have been sent a move from the other player --  Add to board and make a move
 		else if(ls.size()==2){ 
+			addMove(ls.get(0), false, board);
+			addMove(ls.get(0), false, temp);
+			int myMove = 6;
 			//if it's a win condition play there!
+			outerLoop: 
 			for (int i=0;i<boardHeight;i++){
 				for (int j=0;j<boardWidth;j++){
-					if (this.result.isOKMove(board, i, j, boardWidth, boardHeight)){
-						board[i][j] = playerNumber;
-						if (this.result.isWin(boardWidth, boardHeight, board)){
-							System.out.println(Integer.toString(j) + " " + "1");
-							return;
+					if (this.result.isOKMove(temp, i, j, boardWidth, boardHeight)){
+						temp[i][j] = playerNumber;
+						if (this.result.isWin(boardWidth, boardHeight, temp)){
+						//	System.out.println(Integer.toString(j) + " " + "1");
+							temp[i][j] = 9;
+							myMove = j;
+							break outerLoop;
+							//addMove(Integer.toString(j), true, board);
+							//return;
 						}
 					}
-					board[i][j] = 9;
+					temp[i][j] = 9;
 				}
 			}
-
+			FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write("IS THIS SHIT WORKING?");
+			//if it's a lose condition also play there
+			outerLoop:
 			for (int i=0;i<boardHeight;i++){
 				for (int j=0;j<boardWidth;j++){
-					if (this.result.isOKMove(board, i, j, boardWidth, boardHeight)){
+					if (this.result.isOKMove(temp, i, j, boardWidth, boardHeight)){
 						int opponentNumber = (playerNumber == 1) ? 2 : 1;
-						board[i][j] = opponentNumber;
-						if (this.result.isWin(boardWidth, boardHeight, board)){
-							System.out.println(Integer.toString(j) + " " + "1");
-							board[i][j] = playerNumber;
-							return;
+						temp[i][j] = opponentNumber;
+						bw.write("What about here? " + opponentNumber + "\n");	
+						if (this.result.isWin(boardWidth, boardHeight, temp)){
+					//		System.out.println(Integer.toString(j) + " " + "1");
+					//		//addMove(Integer.toString(j), true, board);
+							//return;
+							bw.write("Does it come here? Roll a j: " + j + "\n");
+							myMove = j;
+							temp[i][j] = 9;
+							break outerLoop;
 						}
 					}
-					board[i][j] = 9;
+					temp[i][j] = 9;
 				}
 			}
-
-			while (!timerInterrupted){
-				int moveVal = miniMax(board, 0, limit, flag, boardHeight, boardWidth);
-				nextMoveRow = moveVal[0];
-				nextMoveColumn = moveVal[1];
-				limit++;
-			}
-
-
-
-
-			// addMove(ls.get(0), false, board);
-			// System.out.println("0" + " " + "1");
-			// addMove("0", true, board);
-
-			// System.out.println("4 1");
+			//Find minimax.
+			//Move mov = new Move();
+			//mov = this.result.getMiniMax(board, 0, 5, true, boardHeight, boardWidth, playerNumber);
+			//int nextMoveColumn = mov.nextMove;
+			//moveVal = mov.score;
+			//System.out.println(Integer.toString(nextMoveColumn) + " " + "1");
+			bw.close();
+			System.out.println(Integer.toString(myMove) + " " + "1");
+			
+			addMove(Integer.toString(myMove), true, board);
+			addMove(Integer.toString(myMove), true, board);
+			
 		}
 
 		// Game is over
@@ -167,6 +179,7 @@ public class Player {
 		for (int i=0; i<height; i++) {
 			for (int j=0; j<width; j++) {
 				board[i][j] = 9;
+				temp[i][j] = 9;
 			}
 		}
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);

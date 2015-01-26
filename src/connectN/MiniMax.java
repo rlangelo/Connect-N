@@ -21,16 +21,16 @@ public class MiniMax {
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
 		BufferedWriter bw = new BufferedWriter(fw);
 	}
-	
-	//public int miniMax(int[][] board, int depth, int limit, int alpha, int beta, boolean flag)
-	//{
-		
-//	}
 
 	// This function checks to see if there the state is a winning state
-	boolean isWin(int width, int height, int[][] gameBoard) {
+	boolean isWin(int width, int height, int[][] gameBoard) throws IOException {
 		boolean win = false;
 
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		BufferedWriter bw = new BufferedWriter(fw);
+		//bw.write("Is win was called\n");
+		bw.write(gameBoard[0][0] + "\n");
+		bw.write(gameBoard[5][0] + " bottom corner\n");
 		//check for win horizontally
 		for (int row=0; row<height; row++) {
 		    for (int col=0; col<width-3; col++) { //0 to 3
@@ -38,6 +38,7 @@ public class MiniMax {
 				    gameBoard[row][col] == gameBoard[row][col+2] &&
 				    gameBoard[row][col] == gameBoard[row][col+3] &&
 				    gameBoard[row][col] != 9) {
+					bw.write("Wins horizontally!\n");
 				    win = true;
 				}
 			}
@@ -46,15 +47,18 @@ public class MiniMax {
 		//check for win vertically
 		for (int row=0; row<height-3; row++) { //0 to 2
 		    for (int col=0; col<width; col++) {
+		    	//bw.write(gameBoard[row][col] + " " + gameBoard[row+1][col] + " " + gameBoard[row+2][col] + " " +
+		    	//		gameBoard[row+3][col] + "\n");
 				if (gameBoard[row][col] == gameBoard[row+1][col] &&
 				    gameBoard[row][col] == gameBoard[row+2][col] &&
 				    gameBoard[row][col] == gameBoard[row+3][col] &&
 				    gameBoard[row][col] != 9) {
+					bw.write("Wins Vertically!\n");
 				    win = true;
 				}
 		    }
 		}
-		
+		bw.close();
 		//check for win diagonally (upper left to lower right)
 		for (int row=0; row<height-3; row++) { //0 to 2
 		    for (int col=0; col<width-3; col++) { //0 to 3
@@ -100,26 +104,10 @@ public class MiniMax {
     }
 	
 	// This function will preform the Minimax Algorithm
-	int[] getMiniMax(int[][] board, int depth, int limit, boolean flag, int boardWidth, int boardHeight){
-		int oldValue; value, storedValue;
+	public Move getMiniMax(int[][] board, int depth, int limit, boolean flag, int boardWidth, int boardHeight, int player){
+		int oldValue, value, storedValue;
 		int[] nextMove=new int[] {0,0};
-		int max = math
-
-		
-		if (isInterrupted()) {
-//  	    nextMove[0] = rowNextMove;
-//  	    nextMove[1] = colNextMove;
-			return new int[] {rowNextMove,colNextMove,0};
-  	}
-
-		if (isTie(board)) {
-			return utility(board);
-		}
-
-		//depth limiter
-		if (depth == limit) {
-			return staticBoardEvaluator(board);
-		}
+		int max = Integer.MAX_VALUE;
 
 		depth = depth + 1;
 		
@@ -128,33 +116,39 @@ public class MiniMax {
 			value = Integer.MAX_VALUE;
 			for (int i=0; i<=boardHeight; i++) {
 				for (int j=0; j<=boardWidth; j++) {
-					if (isOKMove(board, i, j)) {
+					if (isOKMove(board, i, j, boardWidth, boardHeight)) {
 						oldValue = value;
-						storedValue =board[i][j];
-						board[i][j] = PLAYER2_MOVE;
-						value = java.lang.Math.min(value, (int) miniMax(board, depth, limit, !flag, boardWidth, boardHeight)[2]);
+						storedValue = board[i][j];
+						int opponentNumber = (player == 1) ? 2 : 1;
+						board[i][j] = opponentNumber;
+						value = java.lang.Math.min(value, getMiniMax(board, depth, limit, !flag, boardWidth, 
+								boardHeight, player).score);
 						board[i][j] = storedValue;
 						if ((depth == 1) && (value < oldValue)) {
 							nextMove[0] = i;
 							nextMove[1] = j;
 						}
-					}/
+					}
 				}
 			}
 			//return new int[] {nextMove[0],nextMove[1],beta};
-			return new int[] {nextMove[0], nextMove[1], value};
+			Move mov = new Move();
+			mov.nextMove = nextMove[1];
+			mov.score = nextMove[2];
+			return mov;
 		}
 		// If the minimum is not selected, then find the maximum
 		else {
 			value = Integer.MIN_VALUE;
 			for (int i=0; i<=boardHeight; i++) {
 				for (int j=0; j<=boardWidth; j++) {
-					if (isOKMove(board, i, j)) {
+					if (isOKMove(board, i, j, boardWidth, boardHeight)) {
 						oldValue = value;
 						storedValue = board[i][j];
-						board[i][j] = PLAYER1_MOVE;
-						v = java.lang.Math.max(vale, (int) miniMax(gameBoard, depth, limit, !flag, boardWidth, boardHeight)[2]);
-						board[i][j] = savedValue;
+						board[i][j] = player;
+						value = java.lang.Math.max(value, getMiniMax(board, depth, limit, !flag, boardWidth, 
+								boardHeight, player).score);
+						board[i][j] = storedValue;
 						if ((depth == 1) && (value > oldValue)) {	   
 							nextMove[0] = i;
 							nextMove[1] = j;
@@ -162,8 +156,12 @@ public class MiniMax {
 					}
 				}
 			}
+			
 			//return new int[] {nextMove[0],nextMove[1],alpha};
-			return new int[] {nextMove[0], nextMove[1], value};
+			Move mov = new Move();
+			mov.nextMove = nextMove[1];
+			mov.score = nextMove[2];
+			return mov;
 		}//end else
 	}
 }
