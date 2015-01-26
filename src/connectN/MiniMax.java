@@ -138,9 +138,12 @@ public class MiniMax {
 								{
 									return j;
 								}
-								else if (board[i][j-3] == 9)
+								else if (j > 2)
 								{
-									return j-3;
+									if (board[i][j-3] == 9)
+									{
+										return j-3;
+									}
 								}
 							}
 							else if (j == width-1)
@@ -153,7 +156,7 @@ public class MiniMax {
 						}
 							
 					}
-					else if ((max1 == 1 || max1 == 2) && spaceLocation == -1)
+					else if ((max2 == 1 || max2 == 2) && spaceLocation == -1)
 					{
 							spaceLocation = j;
 					}

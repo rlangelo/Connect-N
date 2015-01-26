@@ -34,8 +34,6 @@ public class Player {
 	 * it also creates the local version of the game board, and sends our moves to the referee
 	 */
 	public void processInput() throws IOException {
-
-		int moveVal;
 		String s=input.readLine();
 		List<String> ls=Arrays.asList(s.split(" "));
 		this.result = new MiniMax();
@@ -76,6 +74,8 @@ public class Player {
 				}
 
 			}
+			
+			
 			//if it's a win condition play there!
 			/*
 			outerLoop: 
