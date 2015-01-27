@@ -240,7 +240,7 @@ public class MiniMax {
 										return j+1;
 									}
 									
-								}
+								
 								
 								else if (j > 2)
 								{
@@ -250,6 +250,7 @@ public class MiniMax {
 										bw.close();
 										return j-3;
 									}
+								}
 								}
 							}
 							else if (j == width-1)
