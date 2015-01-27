@@ -7,7 +7,7 @@ import java.util.Random;
 public class Player {
 
 	// Variables for our Player
-	String playerName="myPlayer";
+	String playerName="myOtherPlayer";
 	BufferedReader input = new BufferedReader(new InputStreamReader(System.in));  
 	boolean first_move = false;
 	static int boardHeight, boardWidth, N, playerNumber;
@@ -19,7 +19,7 @@ public class Player {
 
 	// Constructor to make the debug file
 	Player() throws IOException {
-		this.file = new File("./Logfile2.txt");
+		this.file = new File("./Logfile.txt");
 		if (!file.exists())
 		{
 			file.createNewFile();
@@ -35,8 +35,6 @@ public class Player {
 	 * it also creates the local version of the game board, and sends our moves to the referee
 	 */
 	public void processInput() throws IOException {
-		//FileWriter fw = new FileWriter(file.getAbsoluteFile());
-		//BufferedWriter bw = new BufferedWriter(fw);
 		String s=input.readLine();
 		List<String> ls=Arrays.asList(s.split(" "));
 		this.result = new MiniMax();
@@ -72,12 +70,12 @@ public class Player {
 				{
 					if (horizontal != -1)
 					{
-						myMove = horizontal;
+						myMove = setHorizontal();
 					}
-					else if (diagonal1 != -1)
-					{
-						myMove = diagonal1;
-					}
+					//else if (diagonal1 != -1)
+					//{
+					//	myMove = diagonal1;
+					//}
 				}
 				
 			}
@@ -182,6 +180,15 @@ public class Player {
 		bw.close();
 	}
 	
+	public int setHorizontal() throws IOException
+	{
+		int move = this.result.checkHorizontally(board, boardWidth, boardHeight, playerNumber);
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		BufferedWriter bw = new BufferedWriter(fw);
+		bw.write("Horizontal Player here: " + move + "\n");
+		bw.close();
+		return move;
+	}
 
 	public static void main(String[] args) throws IOException {
 		Player rp=new Player();
