@@ -20,8 +20,7 @@ public class Player {
 	// Constructor to make the debug file
 	Player() throws IOException {
 		this.file = new File("./Logfile.txt");
-		if (!file.exists())
-		{
+		if (!file.exists()) {
 			file.createNewFile();
 		}
 		FileWriter fw = new FileWriter(file.getAbsoluteFile());
@@ -40,7 +39,7 @@ public class Player {
 		this.result = new MiniMax();
 		// Parse the messages from the Array
 		// This parses the game info and creates our local board
-		if(ls.size()==5){
+		if (ls.size()==5) {
 			// Record Game's specific board height and width
 			boardWidth = Integer.parseInt(ls.get(1)); 
 			boardHeight = Integer.parseInt(ls.get(0)); 
@@ -50,7 +49,7 @@ public class Player {
 			if (Integer.parseInt(ls.get(3)) == playerNumber){
 				first_move = true;
 				System.out.println(Integer.toString(boardWidth/2) +" "+ "1");  //first move
-				addMove(Integer.toString(boardWidth/2), true, board);
+				addMove(Integer.toString(boardWidth/2), "1", true, board, boardHeight);
 				
 			}
 		}
@@ -62,14 +61,11 @@ public class Player {
 			int myMove = rand.nextInt(7);
 			int horizontal = -1;
 			int diagonal1 = -1;
-			for (int i=0;i<boardWidth;i++)
-			{
+			for (int i=0; i<boardWidth; i++) {
 				myMove = this.result.checkVertically(board, boardWidth, boardHeight, playerNumber);
 				horizontal = this.result.checkHorizontally(board, boardWidth, boardHeight, playerNumber);
-				if (myMove == -1)
-				{
-					if (horizontal != -1)
-					{
+				if (myMove == -1) {
+					if (horizontal != -1) {
 						myMove = setHorizontal();
 					}
 					//else if (diagonal1 != -1)
@@ -77,19 +73,15 @@ public class Player {
 					//	myMove = diagonal1;
 					//}
 				}
-				
 			}
-			if (myMove == -1)
-			{
+			if (myMove == -1) {
 				myMove = rand.nextInt(7);
-				while (this.result.isColFull(myMove, board, boardHeight))
-				{
+				while (this.result.isColFull(myMove, board, boardHeight)) {
 					myMove = rand.nextInt(7);
 				}
 			}
 			System.out.println(Integer.toString(myMove) + " " + "1");
-			
-			addMove(Integer.toString(myMove), true, board);
+			addMove(Integer.toString(myMove), "1", true, board, boardHeight);
 		}
 
 		// Game is over
@@ -106,6 +98,7 @@ public class Player {
 				playerNumber = 2;
 			}
 		}
+		// This shouldn't happen
 		else {
 			System.out.println("not what I want");  
 		}
@@ -116,19 +109,19 @@ public class Player {
 		int col = Integer.parseInt(column);
 		int type = Integer.parseInt(moveType);
 		int row = -1;
-		for (int i=0;i<boardHeight;i++)
-		{	
-			// Check if the move is a pop out
-			if (type == 0){
-				for (int i=0; i < height-1; i++){
-					board[i][col] = board[i+1][col]; 
-				}
-				board[height-1][col] = 9;
+		
+		// Check if the move is a pop out
+		if (type == 0) {
+			for (int j=0; j < height-1; j++) {
+				board[j][col] = board[j+1][col]; 
 			}
-			else {
-				// The move is dropping a piece
+			board[height-1][col] = 9;
+		}
+		else {
+			// The move is dropping a piece
+			for (int i=0; i<boardHeight; i++) {	
 				// Find the first available row in the given column
-				if(board[i][col]==9){
+				if(board[i][col]==9) {
 					row = i;
 					if (!myMove) {
 						if (playerNumber == 1) {
@@ -152,14 +145,14 @@ public class Player {
 					}
 				}
 			}
-
-
-			if (myMove && row >= 0) {
-				printBoardToFile();
-			}
-			else if (!myMove && row >= 0) {
-				printBoardToFile();
-			}
+		}
+		
+		// Print the local board to the debug file
+		if (myMove && row >= 0) {
+			printBoardToFile();
+		}
+		else if (!myMove && row >= 0) {
+			printBoardToFile();
 		}
 	}
 
@@ -178,13 +171,12 @@ public class Player {
 		printBoardToFile();
 	}
 
-	public void printBoardToFile() throws IOException
-	{
+	public void printBoardToFile() throws IOException {
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
 		BufferedWriter bw = new BufferedWriter(fw);
 		bw.write("Board: \n");
-		for (int i=boardHeight-1;i>=0;i--){
-			for (int j=0; j<boardWidth; j++){	
+		for (int i=boardHeight-1; i>=0; i--) {
+			for (int j=0; j<boardWidth; j++) {	
 				bw.write(board[i][j] + " ");	
 			}
 			bw.write(" \n");
@@ -193,8 +185,7 @@ public class Player {
 		bw.close();
 	}
 	
-	public int setHorizontal() throws IOException
-	{
+	public int setHorizontal() throws IOException {
 		int move = this.result.checkHorizontally(board, boardWidth, boardHeight, playerNumber);
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
 		BufferedWriter bw = new BufferedWriter(fw);
@@ -211,7 +202,4 @@ public class Player {
 			rp.processInput(); 
 		}
 	}
-	
-	
-
 }
