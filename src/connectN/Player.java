@@ -57,7 +57,7 @@ public class Player {
 
 		// We have been sent a move from the other player --  Add to board and make a move
 		else if(ls.size()==2){ 
-			addMove(ls.get(0), false, board);
+			addMove(ls.get(0), ls.get(1), false, board, boardHeight);
 			Random rand = new Random();
 			int myMove = rand.nextInt(7);
 			int horizontal = -1;
@@ -112,41 +112,54 @@ public class Player {
 	}
 
 	// Add a move to our local version of the game board
-	public void addMove(String column, boolean myMove, int[][] board) throws IOException {
+	public void addMove(String column, String moveType, boolean myMove, int[][] board, int height) throws IOException {
 		int col = Integer.parseInt(column);
+		int type = Integer.parseInt(moveType);
 		int row = -1;
 		for (int i=0;i<boardHeight;i++)
-
-			if(board[i][col]==9){
-				row = i;
-				if (!myMove) {
-					if (playerNumber == 1) {
-						board[i][col] = 2;
-						break;
-					}
-					else {
-						board[i][col] = 1;
-						break;
-					}
+		{	
+			// Check if the move is a pop out
+			if (type == 0){
+				for (int i=0; i < height-1; i++){
+					board[i][col] = board[i+1][col]; 
 				}
-				else {
-					if (playerNumber == 1) {
-						board[i][col] = 1;
-						break;
+				board[height-1][col] = 9;
+			}
+			else {
+				// The move is dropping a piece
+				// Find the first available row in the given column
+				if(board[i][col]==9){
+					row = i;
+					if (!myMove) {
+						if (playerNumber == 1) {
+							board[i][col] = 2;
+							break;
+						}
+						else {
+							board[i][col] = 1;
+							break;
+						}
 					}
 					else {
-						board[i][col] = 2;
-						break;
+						if (playerNumber == 1) {
+							board[i][col] = 1;
+							break;
+						}
+						else {
+							board[i][col] = 2;
+							break;
+						}
 					}
 				}
 			}
 
 
-		if (myMove && row >= 0) {
-			printBoardToFile();
-		}
-		else if (!myMove && row >= 0) {
-			printBoardToFile();
+			if (myMove && row >= 0) {
+				printBoardToFile();
+			}
+			else if (!myMove && row >= 0) {
+				printBoardToFile();
+			}
 		}
 	}
 
