@@ -202,9 +202,9 @@ public class MiniMax {
 									}
 								}
 								else {
-								bw.write("Winning space Horizontally! " + spaceLocation);
-								bw.close();
-								return spaceLocation;
+									bw.write("Winning space Horizontally! " + spaceLocation);
+									bw.close();
+									return spaceLocation;
 								}
 							}
 							if (j != width-1)
@@ -222,12 +222,14 @@ public class MiniMax {
 									}
 									else if (j > 2)
 									{
-										
-										if (board[i][j-3] == 9)
+										if (board[i-1][j-3] != 9)
 										{
-											bw.write("Also block opponent! Horizontal\n");
-											bw.close();
-											return j-3;
+											if (board[i][j-3] == 9)
+											{
+												bw.write("Also block opponent! Horizontal\n");
+												bw.close();
+												return j-3;
+											}
 										}
 									}
 								}
@@ -242,15 +244,15 @@ public class MiniMax {
 									
 								
 								
-								else if (j > 2)
-								{
-									if (board[i][j-3] == 9)
+									else if (j > 2)
 									{
-										bw.write("Also block opponent! Horizontal\n");
-										bw.close();
-										return j-3;
+										if (board[i][j-3] == 9)
+										{
+											bw.write("Also block opponent! Horizontal\n");
+											bw.close();
+											return j-3;
+										}
 									}
-								}
 								}
 							}
 							else if (j == width-1)
