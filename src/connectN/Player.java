@@ -57,31 +57,28 @@ public class Player {
 		// We have been sent a move from the other player --  Add to board and make a move
 		else if(ls.size()==2){ 
 			addMove(ls.get(0), ls.get(1), false, board, boardHeight);
-			Random rand = new Random();
-			int myMove = rand.nextInt(7);
+			Move myMove = this.result.getBestMove(board, playerNumber, boardWidth, boardHeight, 0);
 			int horizontal = -1;
-			int diagonal1 = -1;
+			int vertical = -1;
 			for (int i=0; i<boardWidth; i++) {
-				myMove = this.result.checkVertically(board, boardWidth, boardHeight, playerNumber);
+				vertical = this.result.checkVertically(board, boardWidth, boardHeight, playerNumber);
 				horizontal = this.result.checkHorizontally(board, boardWidth, boardHeight, playerNumber);
-				if (myMove == -1) {
-					if (horizontal != -1) {
-						myMove = setHorizontal();
-					}
+				if (vertical != -1) {
+					
+						myMove.nextMove = vertical;
+				}
+				
+				else if (horizontal != -1) {
+					myMove.nextMove = setHorizontal();
+				}
 					//else if (diagonal1 != -1)
 					//{
 					//	myMove = diagonal1;
 					//}
-				}
 			}
-			if (myMove == -1) {
-				myMove = rand.nextInt(7);
-				while (this.result.isColFull(myMove, board, boardHeight)) {
-					myMove = rand.nextInt(7);
-				}
-			}
-			System.out.println(Integer.toString(myMove) + " " + "1");
-			addMove(Integer.toString(myMove), "1", true, board, boardHeight);
+			
+			System.out.println(Integer.toString(myMove.nextMove) + " " + "1");
+			addMove(Integer.toString(myMove.nextMove), "1", true, board, boardHeight);
 		}
 
 		// Game is over
