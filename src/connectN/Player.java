@@ -57,7 +57,7 @@ public class Player {
 		// We have been sent a move from the other player --  Add to board and make a move
 		else if(ls.size()==2){ 
 			addMove(ls.get(0), ls.get(1), false, board, boardHeight);
-			Move myMove = this.result.getBestMove(board, playerNumber, boardWidth, boardHeight, 0);
+			Move myMove = this.result.getBestMove(board, playerNumber, boardWidth, boardHeight, 4);
 			int horizontal = -1;
 			int vertical = -1;
 			for (int i=0; i<boardWidth; i++) {
