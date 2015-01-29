@@ -1,3 +1,11 @@
+/*
+ * CS4341 Artificial Intelligence Project 1 -- Connect-N
+ * Rafael Angelo rlangelo@wpi.edu
+ * Daniel Benson djbenson@wpi.edu
+ * This class process the messages given by the referee and makes our moves by 
+ * passing them to the referee.
+ */
+
 package connectN;
 import java.io.*;
 import java.util.Arrays;
@@ -171,7 +179,7 @@ public class Player {
 		}
 	}
 
-	// Create the local version of the gane board
+	// Create the local version of the gamee board
 	public void createBoard(int width, int height) throws IOException {
 		for (int i=0; i<height; i++) {
 			for (int j=0; j<width; j++) {
@@ -186,6 +194,7 @@ public class Player {
 		printBoardToFile();
 	}
 
+	// This function prints our local version of the board to a external debug file
 	public void printBoardToFile() throws IOException {
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
 		BufferedWriter bw = new BufferedWriter(fw);
@@ -199,7 +208,7 @@ public class Player {
 		bw.write(" \n");
 		bw.close();
 	}
-	
+
 	public int setHorizontal() throws IOException {
 		int move = this.result.checkHorizontally(board, boardWidth, boardHeight, playerNumber);
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
@@ -209,6 +218,7 @@ public class Player {
 		return move;
 	}
 
+	// Main Function to process referee input
 	public static void main(String[] args) throws IOException {
 		Player rp=new Player();
 		System.out.println(rp.playerName);
