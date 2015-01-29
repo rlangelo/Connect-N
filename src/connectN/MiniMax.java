@@ -37,7 +37,7 @@ public class MiniMax {
 			max1=0;
 			max2=0;
 			for(int i=0;i<height;i++){
-				if(board[i][j]==player){
+				if(board[i][j]==opponentPlayer){
 					max1++;
 					max2=0;
 					if(max1==3)
@@ -56,7 +56,7 @@ public class MiniMax {
 					}
 
 				}
-				else if(board[i][j]==opponentPlayer){
+				else if(board[i][j]==player){
 					max1=0;
 					max2++;
 					if(max2==3)
@@ -97,96 +97,100 @@ public class MiniMax {
 			max2=0;
 			//bw.write("In Horizontal\n");
 			for(int j=0;j<width;j++){
-				if(board[i][j]==player){
+				 if(board[i][j]==opponentPlayer){
 					max1++;
 					max2=0;
-					//bw.write("What about here?! " + max1 + "\n");
+					//bw.write("What about Opponent here?!\n");
 					if(max1==3)
 					{
-						//bw.write("I have 3 of a kind!\n");
+						//bw.write("Opponent has 3 of a kind!\n");
 						if (spaceLocation != -1)
 						{
-							if (i != 0)
+							if (i > 0)
 							{
+								bw.write("Whaddup?!" + (i-1) + " " + spaceLocation + "\n");
 								if (board[i-1][spaceLocation] != 9)
 								{
-									bw.write("Winning space Horizontally! " + spaceLocation);
+									bw.write("Blocking space Horizontal\n");
 									bw.close();
 									return spaceLocation;
 								}
 							}
-							else
-							{
-								bw.write("Winning space Horizontally! " + spaceLocation);
+							else {
+								bw.write("Blocking space Horizontally! " + spaceLocation);
 								bw.close();
 								return spaceLocation;
 							}
 						}
 						if (j != width-1)
 						{
-							if (board[i][j+1] == 9)
+							if (i > 0)
 							{
-								if (i>0)
+								if (board[i-1][j+1] != 9)
 								{
-									if (board[i-1][j+1] != 9)
+									if (board[i][j+1] == 9)
 									{
-										bw.write("Winning Horizontally!\n");
+										bw.write("Blocking opponent! Horizontal\n");
 										bw.close();
 										return j+1;
 									}
 								}
-								else {
-									bw.write("Winning Horizontally!\n");
-									bw.close();
-									return j+1;
-								}
-										
-							}
-							else if (board[i][j-3] == 9)
-							{
-								if (i > 0)
+								if (j > 2)
 								{
 									if (board[i-1][j-3] != 9)
 									{
-										bw.write("Winning as well Horizontally!\n");
+										if (board[i][j-3] == 9)
+										{
+											bw.write("Also block opponent! Horizontal\n");
+											bw.close();
+											return j-3;
+										}
+									}
+								}
+							}
+							else if (i == 0)
+							{
+								if (board[i][j+1] == 9)
+								{
+									bw.write("Blocking opponent! Horizontal\n");
+									bw.close();
+									return j+1;
+								}
+								
+							
+							
+								else if (j > 2)
+								{
+									if (board[i][j-3] == 9)
+									{
+										bw.write("Also block opponent! Horizontal\n");
 										bw.close();
 										return j-3;
 									}
-								}
-								else
-								{
-								bw.write("Winning as well Horizontally!\n");
-								bw.close();
-								return j-3;
 								}
 							}
 						}
 						else if (j == width-1)
 						{
-							if (i > 0){
-								if (board[i-1][j-3] != 9){
+							if (i > 0)
+							{
+								if (board[i-1][j-3]!=9)
+								{
 									if (board[i][j-3] == 9)
 									{
-										bw.write("Also winning horizontally!\n");
+										bw.write("Blocking as well! Horizontal\n");
 										bw.close();
 										return j-3;
 									}
 								}
 							}
-							else {
-								if (board[i][j-3] == 9)
-								{
-									bw.write("Also winning horizontally!\n");
-									bw.close();
-									return j-3;
-								}
-							}
 						}
 					}
+
 				}
 
 
-					else if(board[i][j]==opponentPlayer){
+					else if(board[i][j]==player){
 						max1=0;
 						max2++;
 						//bw.write("What about Opponent here?!\n");
@@ -224,7 +228,7 @@ public class MiniMax {
 											return j+1;
 										}
 									}
-									else if (j > 2)
+									if (j > 2)
 									{
 										if (board[i-1][j-3] != 9)
 										{
@@ -286,6 +290,7 @@ public class MiniMax {
 					else{
 						max1=0;
 						max2=0;
+						spaceLocation = -1;
 					}
 			} 
 		}
@@ -452,7 +457,7 @@ public class MiniMax {
 			currMove = legalMoves.get(i);
 			currCol = currMove[0];
 			currRow = currMove[1];
-			tempMove = minimax(tempBoard, depth-1, oppositePlayer, col, row, width, height);
+			tempMove = minimax(tempBoard, depth-1, player, col, row, width, height);
 			if (tempMove.score > alpha)
 			{
 				alpha = tempMove.score;
