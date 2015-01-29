@@ -68,6 +68,10 @@ public class Player {
 		else if(ls.size()==2){ 
 			addMove(ls.get(0), ls.get(1), false, board, boardHeight);
 			Move myMove = new Move();
+			
+			int opponentPlayer = (playerNumber == 1) ? 2 : 1;
+			
+			
 			if (secondsToPlay < 2)
 			{
 				myMove = this.result.getBestMove(board, playerNumber, boardWidth, boardHeight, 4);
@@ -76,19 +80,23 @@ public class Player {
 			{
 				myMove = this.result.getBestMove(board, playerNumber, boardWidth, boardHeight, 5);
 			}
-			else if (secondsToPlay > 15)
-			{
-				myMove = this.result.getBestMove(board, playerNumber, boardWidth, boardHeight, 6);
-			}
+		//	else if (secondsToPlay > 15)
+		//	{
+		//		myMove = this.result.getBestMove(board, playerNumber, boardWidth, boardHeight, 6);
+		//	}
 			else
 			{
 				 myMove = this.result.getBestMove(board, playerNumber, boardWidth, boardHeight, 4);
 			}
 			int horizontal = -1;
 			int vertical = -1;
+			int horizontalOpp = -1;
+			int verticalOpp = -1;
 			for (int i=0; i<boardWidth; i++) {
 				vertical = this.result.checkVertically(board, boardWidth, boardHeight, playerNumber);
 				horizontal = this.result.checkHorizontally(board, boardWidth, boardHeight, playerNumber);
+				horizontalOpp = this.result.checkHorizontally(board, boardWidth, boardHeight, opponentPlayer);
+				verticalOpp = this.result.checkVertically(board, boardWidth, boardHeight, opponentPlayer);
 				if (vertical != -1) {
 					
 						myMove.nextMove = vertical;
@@ -97,10 +105,15 @@ public class Player {
 				else if (horizontal != -1) {
 					myMove.nextMove = setHorizontal();
 				}
-					//else if (diagonal1 != -1)
-					//{
-					//	myMove = diagonal1;
-					//}
+				else if (horizontalOpp != -1)
+				{
+					myMove.nextMove = horizontalOpp;
+				}
+				else if (verticalOpp != -1)
+				{
+					myMove.nextMove = verticalOpp;
+				}
+					
 			}
 			
 			System.out.println(Integer.toString(myMove.nextMove) + " " + "1");

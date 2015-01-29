@@ -49,7 +49,7 @@ public class MiniMax {
 			max1=0;
 			max2=0;
 			for(int i=0;i<height;i++) {
-				if(board[i][j]==opponentPlayer) {
+				/*if(board[i][j]==opponentPlayer) {
 					max1++;
 					max2=0;
 					if(max1==3) {
@@ -61,7 +61,8 @@ public class MiniMax {
 					}
 
 				}
-				else if(board[i][j]==player) {
+				*/
+				 if(board[i][j]==player) {
 					max1=0;
 					max2++;
 					if(max2==3) {
@@ -96,7 +97,7 @@ public class MiniMax {
 			max1=0;
 			max2=0;
 			for(int j=0;j<width;j++) {
-				if(board[i][j]==opponentPlayer) {
+			/*	if(board[i][j]==opponentPlayer) {
 					max1++;
 					max2=0;
 					if(max1==3) {
@@ -147,8 +148,8 @@ public class MiniMax {
 							}
 						}
 					}
-				}
-				else if(board[i][j]==player){
+				}*/
+				if(board[i][j]==player){
 					max1=0;
 					max2++;
 					if(max2==3)	{
