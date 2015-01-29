@@ -14,6 +14,7 @@ public class Player {
 	int board[][] = new int[100][100];
 	int temp[][] = new int[100][100];
 	int numMoves = 0;
+	int secondsToPlay;
 	File file;
 	MiniMax result;
 
@@ -44,6 +45,7 @@ public class Player {
 			boardWidth = Integer.parseInt(ls.get(1)); 
 			boardHeight = Integer.parseInt(ls.get(0)); 
 			N = Integer.parseInt(ls.get(2));
+			secondsToPlay = Integer.parseInt(ls.get(4));
 			createBoard(boardWidth, boardHeight);
 
 			if (Integer.parseInt(ls.get(3)) == playerNumber){
@@ -57,7 +59,23 @@ public class Player {
 		// We have been sent a move from the other player --  Add to board and make a move
 		else if(ls.size()==2){ 
 			addMove(ls.get(0), ls.get(1), false, board, boardHeight);
-			Move myMove = this.result.getBestMove(board, playerNumber, boardWidth, boardHeight, 4);
+			Move myMove = new Move();
+			if (secondsToPlay < 2)
+			{
+				myMove = this.result.getBestMove(board, playerNumber, boardWidth, boardHeight, 4);
+			}
+			else if (secondsToPlay > 5 && secondsToPlay < 15)
+			{
+				myMove = this.result.getBestMove(board, playerNumber, boardWidth, boardHeight, 5);
+			}
+			else if (secondsToPlay > 15)
+			{
+				myMove = this.result.getBestMove(board, playerNumber, boardWidth, boardHeight, 6);
+			}
+			else
+			{
+				 myMove = this.result.getBestMove(board, playerNumber, boardWidth, boardHeight, 4);
+			}
 			int horizontal = -1;
 			int vertical = -1;
 			for (int i=0; i<boardWidth; i++) {
