@@ -309,7 +309,14 @@ public class MiniMax {
 			int max = (width/2)+1;
 			int min = (width/2)-1;
 			int nextNum = rand.nextInt((max-min)+1)+min;
-			mov.nextMove = nextNum;
+			if (getFirstEmptyRow(board, width, height, 4) == 0)
+			{
+				mov.nextMove = 4;
+			}
+			else
+			{
+				mov.nextMove = nextNum;
+			}
 		}
 		return mov;
 	}
